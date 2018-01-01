@@ -1,0 +1,81 @@
+entity Material {
+	descricao String,
+    unidade Unidade,
+    estoqueMinimo Long,
+    estoqueAtual Long,
+    dataCadastro Date
+}
+enum Unidade {
+    METRO, UND, PAR, KG, LITRO, GALAO, LATA, BARRA, PECA, CONJUNTO
+}
+entity Entrada {
+	data Date,
+}
+entity EntradaMaterial {
+	material Material,
+    entrada Entrada, 
+    quantidade Long,
+    valorUnitario Double
+}
+entity AlmoxarifadoCentral {
+	numeroEmpenho String,
+    entrada Entrada
+}
+entity ContratoManutencaoPredial {
+	numeroPedido String,
+    numeroNotaFiscal String,
+    entrada Entrada
+}
+entity ProntoPagamento {
+    numeroNotaFiscal String,
+    entrada Entrada
+}
+entity Doacao {
+    observacao String,
+    entrada Entrada
+}
+entity Devolucao {
+	nomeFuncionario String,
+    numeroPedido String,
+    observacao String,
+    entrada Entrada
+}
+entity OutrasEntradas {
+    observacao String,
+    entrada Entrada
+}
+
+relationship ManyToOne {
+	EntradaMaterial{entrada} to Entrada
+}
+relationship ManyToOne {
+	EntradaMaterial{material} to Material
+}
+relationship ManyToOne {
+	AlmoxarifadoCentral{entrada} to Entrada
+}
+relationship ManyToOne {
+	ContratoManutencaoPredial{entrada} to Entrada
+}
+relationship ManyToOne {
+	ProntoPagamento{entrada} to Entrada
+}
+relationship ManyToOne {
+	Doacao{entrada} to Entrada
+}
+relationship ManyToOne {
+	Devolucao{entrada} to Entrada
+}
+relationship ManyToOne {
+	OutrasEntradas{entrada} to Entrada
+}
+
+// Set pagination options
+paginate Material, Entrada, AlmoxarifadoCentral, ContratoManutencaoPredial, ProntoPagamento, Doacao, Devolucao, OutrasEntradas with pagination
+
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except EntradaMaterial, Entrada
+// Set an angular suffix
+angularSuffix * with mySuffix
